@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 max
+/* Copyright (C) 2013 Max Wällstedt
  * This file is part of NSpot.
  *
  * NSpot is free software: you can redistribute it and/or modify
@@ -16,11 +16,21 @@
  */
 
 #include <curses.h>
+#include <locale.h>
 #include <libspotify/api.h>
+
+#include "nspot_login.h"
 
 int main()
 {
+	int ch;
+
+	setlocale(LC_ALL, "");
 	initscr();
+	raw();
+	noecho();
+	keypad(stdscr, TRUE);
+	meta(stdscr, TRUE);
 	curs_set(0);
 
 	mvprintw(4, 0,
@@ -38,9 +48,20 @@ int main()
 "        IIIIIIIIIIIIII\n"
 "          IIIIIIIIII\n");
 
-	printw("\n\n\t\t\t\t\tPress any key to quit");
+	mvprintw(18, 35, "Press Enter/Return key to login");
+	mvprintw(19, 42, "or Ctrl-Q to quit");
 
-	getch();
+	while ((ch = getch()) != '\n'
+	       && ch != '\r'
+               && ch != KEY_ENTER
+	       && ch != 0x11) {
+		;
+	}
+
+	if (ch != 0x11) {
+		nspot_login();
+	}
+
 	endwin();
 
 	return 0;

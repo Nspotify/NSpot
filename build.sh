@@ -6,7 +6,7 @@ LD="gcc"
 
 AFLAGS="-f elf64"
 CFLAGS="-Wall -O3"
-LDFLAGS="-lncurses -lspotify"
+LDFLAGS="-lncursesw -lspotify"
 
 SRCDIR="src"
 OBJDIR="obj"
@@ -14,6 +14,8 @@ BINDIR="bin"
 
 SOURCES=(
 	main.c
+	nspot_login.c
+	input_field.c
 	)
 
 TARGET="NSpot"
