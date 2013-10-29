@@ -28,6 +28,7 @@ void nspot_login()
 {
 	unsigned char *username = NULL;
 	unsigned char *password = NULL;
+	const char *blob = NULL;
 	int i;
 
 	erase();
@@ -41,7 +42,7 @@ void nspot_login()
 	mvprintw(11, 7, "Password");
 
 	curs_set(1);
-	input_field(8, 7, 31, &username);
+	input_field(8, 7, 31, &username, 0);
 	curs_set(0);
 
 	if (*username) {
@@ -49,8 +50,13 @@ void nspot_login()
 			mvaddch(11, 7 + i, ' ');
 
 		curs_set(1);
-		input_field(11, 7, 31, &password);
+		input_field(11, 7, 31, &password, 1);
 		curs_set(0);
+
+		if (!*password) {
+			free(password);
+			password = NULL;
+		}
 	} else {
 		free(username);
 		username = NULL;

@@ -32,7 +32,8 @@ void print_string(int y,
                   int x,
                   struct utf8_char *cur_char,
                   int len,
-                  int start_i);
+                  int start_i,
+                  int password);
 void free_previous_utf8_char(struct utf8_char *cur_char);
 int cur_i(struct utf8_char *cur_char);
 int build_string(struct utf8_char *cur_char, unsigned char **str);
@@ -51,7 +52,7 @@ void free_utf8_chars(struct utf8_char *cur_char);
  *     1 - Memory allocation error
  *     2 - Invalid arguments
  */
-int input_field(int y, int x, int len, unsigned char **str)
+int input_field(int y, int x, int len, unsigned char **str, int password)
 {
 	unsigned char utf8_index;
 	unsigned char bitmask;
@@ -78,7 +79,7 @@ int input_field(int y, int x, int len, unsigned char **str)
 	int ch, start_i = set_start_i(cur_char, len);
 
 	do {
-		print_string(y, x, cur_char, len, start_i);
+		print_string(y, x, cur_char, len, start_i, password);
 		ch = getch();
 
 		if (ch == KEY_BACKSPACE) {
@@ -179,7 +180,7 @@ int input_field(int y, int x, int len, unsigned char **str)
 		}
 	} while (ch != '\n' && ch != '\r' && ch != KEY_ENTER);
 
-	print_string(y, x, cur_char, len, start_i);
+	print_string(y, x, cur_char, len, start_i, password);
 	build_string(cur_char, str);
 	free_utf8_chars(cur_char);
 
@@ -316,7 +317,8 @@ void print_string(int y,
                   int x,
                   struct utf8_char *cur_char,
                   int len,
-                  int start_i)
+                  int start_i,
+                  int password)
 {
 	int str_i = 0, cur_x, tmp_start_i = start_i;
 	struct utf8_char *tmp_char = cur_char;
@@ -331,7 +333,10 @@ void print_string(int y,
 	}
 
 	while (str_i < len && tmp_char) {
-		mvprintw(y, x + str_i, "%s", tmp_char->str);
+		if (password && tmp_char->next)
+			mvprintw(y, x + str_i, "\xE2\x80\xA2");
+		else
+			mvprintw(y, x + str_i, "%s", tmp_char->str);
 
 		if (tmp_char == cur_char) {
 			cur_x = x + str_i;

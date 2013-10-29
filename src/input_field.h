@@ -18,6 +18,6 @@
 #ifndef INPUT_FIELD_H
 #define INPUT_FIELD_H
 
-int input_field(int y, int x, int len, unsigned char **str);
+int input_field(int y, int x, int len, unsigned char **str, int password);
 
 #endif
